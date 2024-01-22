@@ -18,7 +18,7 @@ func main() {
 	// que siempre al final cierre el archivo y no gaste recursos
 	defer file.Close()
 
-	var tasks []tasks.Task
+	var tasks []task.Task
 
 	// informacion del archivo json
 	info, err := file.Stat()
@@ -40,10 +40,25 @@ func main() {
 			panic(err)
 		}
 	} else {
+		tasks = []task.Task{}
 	}
 
-	fmt.Println(tasks)
+	//aqui ya estamos comprobando lo que entra por consola
+	// al momento de utilizar esta funcion debe retornar 2 parametros
+	// ["ruta del programa" parametro]
+	if (len(os.Args) < 2) {
+		printUsage()
+	}
+
+	switch os.Args[1] {
+	case "list":
+		task.ListTask(tasks)
+	}
 
 
 
+}
+
+func printUsage() {
+	fmt.Println("Uso: go-clid-crud [list|add|complete|delete]")
 }

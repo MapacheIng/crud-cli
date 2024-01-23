@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bufio"
 	"encoding/json"
 	"fmt"
 	"io"
 	"os"
+	"strings"
 
-	"github.com/MapacheIng/crud-cli/tasks"
+	task "github.com/MapacheIng/crud-cli/tasks"
 )
 
 func main() {
@@ -46,16 +48,26 @@ func main() {
 	//aqui ya estamos comprobando lo que entra por consola
 	// al momento de utilizar esta funcion debe retornar 2 parametros
 	// ["ruta del programa" parametro]
-	if (len(os.Args) < 2) {
+	if len(os.Args) < 2 {
 		printUsage()
 	}
 
 	switch os.Args[1] {
 	case "list":
 		task.ListTask(tasks)
+	case "add":
+		fmt.Println("cual es tu tarea?: ")
+		// leemos lo que entra por consola (la mejor forma de leer la terminal)
+		reader := bufio.NewReader(os.Stdin)
+		// aqui convertimos la cadea en un string
+		name, _ := reader.ReadString('\n')
+		// aqui borramos espacios adicionales (cadena en limpio)
+		name = strings.TrimSpace(name)
+
+		// aqui del paquete task la anadimos a la variable tasks
+		tasks = task.AddTask(tasks, name)
+		task.SaveTasks(file, tasks)
 	}
-
-
 
 }
 

@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"io"
 	"os"
+	"strconv"
 	"strings"
 
 	task "github.com/MapacheIng/crud-cli/tasks"
@@ -55,6 +56,7 @@ func main() {
 	switch os.Args[1] {
 	case "list":
 		task.ListTask(tasks)
+
 	case "add":
 		fmt.Println("cual es tu tarea?: ")
 		// leemos lo que entra por consola (la mejor forma de leer la terminal)
@@ -67,6 +69,38 @@ func main() {
 		// aqui del paquete task la anadimos a la variable tasks
 		tasks = task.AddTask(tasks, name)
 		task.SaveTasks(file, tasks)
+
+	case "delete":
+		if len(os.Args) < 3 {
+			fmt.Println("debes de proporcionar un ID para eliminar")
+			return
+		}
+		id, err := strconv.Atoi(os.Args[2])
+		if err != nil {
+			fmt.Println("el id debe ser un numero")
+			return
+		}
+
+		tasks = task.DeleteTask(tasks, id)
+		task.SaveTasks(file, tasks)
+		fmt.Println("Tarea eliminada")
+
+	case "complete":
+		if len(os.Args) < 3 {
+			fmt.Println("debes de proporcionar un ID para Completar")
+			return
+		}
+		id, err := strconv.Atoi(os.Args[2])
+		if err != nil {
+			fmt.Println("el id debe ser un numero")
+			return
+		}
+		tasks = task.CompleteTask(tasks, id)
+		task.SaveTasks(file, tasks)
+		fmt.Println("la tarea fue completada")
+
+	default:
+		printUsage()
 	}
 
 }

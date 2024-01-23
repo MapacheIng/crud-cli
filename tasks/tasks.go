@@ -39,6 +39,25 @@ func AddTask(tasks []Task, name string) []Task {
 	return append(tasks, newTask)
 }
 
+func DeleteTask(tasks []Task, id int) []Task {
+	for i, task := range tasks {
+		if task.ID == id {
+			return append(tasks[:i], tasks[i+1:]...)
+		}
+	}
+	return tasks
+}
+
+func CompleteTask(tasks []Task, id int) []Task {
+	for i, task := range tasks {
+		if task.ID == id {
+			tasks[i].Complete = !tasks[i].Complete
+			break
+		}
+	}
+	return tasks
+}
+
 func SaveTasks(file *os.File, tasks []Task) {
 	// esta funcion es para guardar en json los datos (se utiliza con la funcion anterior)
 	// este metodo lo que hacemos es convertir un arreglo en json
@@ -47,7 +66,7 @@ func SaveTasks(file *os.File, tasks []Task) {
 		panic(err)
 	}
 	// aqui es para ubicar el puntero
-	_, err = file.Seek(0,0)
+	_, err = file.Seek(0, 0)
 	if err != nil {
 		panic(err)
 	}
@@ -68,12 +87,12 @@ func SaveTasks(file *os.File, tasks []Task) {
 	if err != nil {
 		panic(err)
 	}
-
 }
 
+// funcion para generar el siguiente id
 func GetNextID(tasks []Task) int {
 	if len(tasks) == 0 {
 		return 1
 	}
-	return tasks[len(tasks) - 1].ID + 1
+	return tasks[len(tasks)-1].ID + 1
 }
